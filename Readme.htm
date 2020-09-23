@@ -1,0 +1,158 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Assembler Editor Readme</title>
+</style>
+</head>
+<body>
+<p><font face="Tahoma" size="4"><b><u>Assembler Editor Readme</u></b></font></p>
+<p><font face="Tahoma" size="2">Copyright © Peter Scale 2002</font></p>
+<p><font face="Tahoma" size="2">Home: <a href="http://flashlight.webpark.cz" target="_blank">http://flashlight.webpark.cz</a><br>
+NASM: <a href="http://nasm.sourceforge.net" target="_blank">http://nasm.sourceforge.net</a><br>
+E-mail: <a href="mailto:bishopx@quick.cz">bishopx@quick.cz</a></font></p>
+<p><font face="Tahoma" size="2"><b>Current versions of main files:</b></font></p>
+<p><font face="Tahoma" size="2">Assembler Editor &lt;<i>asmedit.exe</i>&gt;: 1.0<br>
+Netwide Assembler &lt;<i>nasmw.exe</i>&gt;: 0.98.34<br>
+NASM Documentation (HTML format): 0.98.34<br>
+Microsoft Incremental Linker &lt;<i>link.exe</i>&gt;: 7.00.9254<br>
+Microsoft Resource Compiler &lt;<i>rc.exe</i>&gt;: 5.1.2259.1<br>
+</font></p>
+<p><font face="Tahoma" size="2"><b>GUI for Netwide Assembler:</b></font></p>
+<ul>
+<li><font face="Tahoma" size="2">building of binary, DLL and EXE files</font></li>
+<li><font face="Tahoma" size="2">testing speed of code parts</font></li>
+<li><font face="Tahoma" size="2">comfortable error handling</font></li>
+<li><font face="Tahoma" size="2">fast usage of help</font></li>
+<li><font face="Tahoma" size="2">multi-pass optimization</font></li>
+<li><font face="Tahoma" size="2">recent files</font></li>
+<li><font face="Tahoma" size="2">automatic saving</font></li>
+<li><font face="Tahoma" size="2">options for font and colors</font></li>
+<li><font face="Tahoma" size="2">included assembler &amp; linker + resource compiler</font></li>
+</ul>
+<p><font face="Tahoma" size="2">Note: The editor is able to open asm files from
+a command line (associate by a windows manager).
+</font></p>
+<p><font face="Tahoma" size="2"><b>Contents:</b></font></p>
+<ol>
+  <li><font face="Tahoma" size="2"><a href="#Documentation">Documentation</a></font></li>
+  <li><font face="Tahoma" size="2"><a href="#Linker">Linker</a></font></li>
+  <li><font face="Tahoma" size="2"><a href="#Options">Options</a></font></li>
+  <li><font face="Tahoma" size="2"><a href="#Speed">Testing speed</a></font></li>
+  <li><font face="Tahoma" size="2"><a href="#News">What's new?</a></font></li>
+</ol>
+<p><font face="Tahoma" size="3"><b><u><a name="Documentation">Documentation</a></u></b></font><font face="Tahoma" size="2"><br>
+<br>
+You can get a help for any instruction or directive by pressing F1 (just like in
+Visual Basic). So never replace or delete the current documentation in a doc folder if
+you want to use it. You must have Microsoft Internet Explorer to work. If you
+want some more then look at <a href="http://www.agner.org/assem" target="_blank"> http://www.agner.org/assem</a> (intended for another
+assembler but very useful).
+</font></p>
+<p><font face="Tahoma" size="2">Browse <a href="nasmdoc0.html">Contents</a> or <a href="nasmdoci.html">Index</a>.</font></p>
+<p><b><u><font face="Tahoma" size="3"><a name="Linker">Linker</a></font></u></b><font face="Tahoma" size="2"><br>
+<br>
+I'm using Microsoft Incremental Linker (from Visual Studio.NET - compatible with
+VB5 &amp; VB6) to link object files (and resources) into executable files.
+Libraries are needed for making imports in your applications. I included only the top used libraries.
+Manual library declaration (in linker's info section) is not needed.</font></p>
+<p><font face="Tahoma" size="2">Use <a href="nasmdoc5.html#section-5.4">EXTERN</a>
+directive to declare the function
+from kernel32.dll as import (library kernel32.lib must be present in the lib
+folder). For example:</font></p>
+<p><font face="Courier New" size="2"><b>EXTERN</b> _GetTickCount@0&nbsp;&nbsp;&nbsp;
+<font color="#008000">; original name is
+'GetTickCount'</font></font></p>
+<p><font face="Tahoma" size="2">Number after '@' means bytes of arguments pushed
+on stack before calling the function. Now you can call this function like this:</font></p>
+<p><font face="Courier New" size="2"><font color="#4444FF">call</font> _GetTickCount@0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#008000">; ticks are returned in eax</font></font></p>
+<p><font face="Tahoma" size="2">Usually DLL or EXE has an entry point procedure
+(executed when the file is loaded). In my editor it is custom (_StdCall@12 by
+default). This procedure could be generated automaticaly by executing a menu item.
+Example:</font></p>
+<p><font face="Courier New" size="2">[<b>SECTION</b> .text]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#008000">; code <a href="nasmdoc5.html#section-5.2">section</a>, don't forget to
+declare this</font></font></p>
+<p><font face="Courier New" size="2"><b>GLOBAL</b> _StdCall@12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#008000">; declare a symbol for public
+use</font><br>
+_StdCall@12:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#008000">; here is the entry point</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#4444FF">mov</font>  <font color="#000080">eax</font>,1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#008000">; set a success flag</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#4444FF">ret</font> 12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#008000">
+; always return 12 bytes of arguments</font></font></p>
+<p><font face="Tahoma" size="2">If the symbol after <a href="nasmdoc5.html#section-5.5">GLOBAL</a> has another name, it is
+linked as export (only if DLL). Macros with 'GLOBAL' directive will not work.
+This type of procedure is available from the menu, too. Example:</font></p>
+<p><font face="Courier New" size="2"><b>GLOBAL</b> _MyFunc@8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#008000">; real import name will be
+'MyFunc'</font><br>
+_MyFunc@8:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#4444FF">enter</font>  4,0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#008000">; reserve 4 bytes on a stack at an address ebp-4</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#4444FF">push</font>  <font color="#000080"> esi</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#4444FF">push</font>  <font color="#000080"> edi</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#4444FF">push</font>  <font color="#000080"> ebx</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#008000">; preserve these 3 registers in general</font></font></p>
+<p><font face="Courier New" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#008000">;
+your code</font></font></p>
+<p><font face="Courier New" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#4444FF">pop</font>  <font color="#000080"> ebx</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#008000">; recover from the stack</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#4444FF">pop</font>  <font color="#000080"> edi</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#4444FF">pop</font>  <font color="#000080"> esi</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#4444FF">leave</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<font color="#008000">; destroys a stack frame created by 'enter'</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#4444FF">ret</font> 8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#008000">
+; return number of bytes of arguments (2 x 32bit)</font>
+</font></p>
+<p><font face="Tahoma" size="2">After successful DLL build process you can find
+the lib file in a current directory (if allowed in Options). You can use it just like
+other system libs.</font></p>
+<p><font face="Tahoma" size="2">The linker could be switched into another mode
+by passing these parameters:</font></p>
+<p><font face="Tahoma" size="2"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -edit</b> - COFF/PE Editor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<b>-dump</b> - COFF/PE Dumper<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<b>-lib</b> - Library Manager<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<b>-help</b> - Helper</font></p>
+<p><font face="Tahoma" size="3"><b><u><a name="Options">Options</a></u></b></font></p>
+<ul type="square">
+<li><font face="Tahoma" size="2"><b>Entry Point</b> - set entry point procedure name (case sensitive)</font></li>
+<li><font face="Tahoma" size="2"><b>Multi-pass Optimization</b> - more info <a href="nasmdoc2.html#section-2.1.15">here</a>; available levels corresponds with NASM's levels 0-3 </font></li>
+<li><font face="Tahoma" size="2"><b>EXE Subsystem</b> - choose not to alloc console (GUI) or to alloc console (Console)</font></li>
+<li><font face="Tahoma" size="2"><b>Include RC File</b> - compile C style resource script and link (only DLL &amp; EXE); RC file must have the same name like ASM file</font></li>
+<li><font face="Tahoma" size="2"><b>TASM Compatibility Mode</b> - provides
+  limited compatibility with Borland's TASM; more info <a href="nasmdoc2.html#section-2.1.16">here</a></font></li>
+<li><font face="Tahoma" size="2"><b>Optional Output</b> - contains additional available output files for building </font></li>
+<li><font face="Tahoma" size="2"><b>Recent Files</b> - maximum number of recent
+  files in menu</font></li>
+<li><font face="Tahoma" size="2"><b>Auto Save</b> - automaticaly save temporary file after given interval (0 to disable)</font></li>
+<li><font face="Tahoma" size="2"><b>Font &amp; Background</b> - choose your favourite font and colors</font></li>
+</ul>
+<p><b><u><font face="Tahoma" size="3"><a name="Speed">Testing speed</a></font></u></b><font face="Tahoma" size="2"><br>
+<br>
+You can test a speed of your code by executing 'Test speed (BIN)' menu item. The
+code
+is compiled to a binary file so there are some restrictions (exports, imports
+etc.). This function is intended only for testing single instructions or small
+pieces of the code. You can change any register during the test but Stack Pointer (esp)
+must have the same value at the end like in the beginning of the code. In finish
+there will be a report about clock cycles taken by your whole code and a stability
+report which indicates how much is the average value constant. Application doesn't
+detect any infinite loops, logical errors or illegal operations. The code is
+optimized for plain Pentium and Pentium MMX procesors so there could be some
+misses when running on other processors but I tried to handle this (successfuly
+tested on Pentium II). Test is supported on Pentium or higher processors due to
+a clock counter. This feature is of course experimental.</font></p>
+<p><font size="3" face="Tahoma"><b><u><a name="News">What's new?</a></u></b></font></p>
+<p><font face="Tahoma" size="2"><b>Assembler Editor 1.0:</b></font></p>
+<ul type="circle">
+  <li><font face="Tahoma" size="2">Final release (not last)</font></li>
+</ul>
+<p>&nbsp;</p>
+</body>
+</html>
